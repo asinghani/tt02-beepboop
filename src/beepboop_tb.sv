@@ -9,8 +9,30 @@ module beepboop_tb;
     asinghani_beepboop dut (.*);
 
     // Who needs $monitor?
+    wire [5:0] gpio = io_out[5:0];
     always_comb begin
-        $display("[%d] btn=%b rst=%b out=%b", $time, btn, reset, io_out);
+        $display("[%d] btn=%b rst=%b out=%b", $time, btn, reset, gpio);
+    end
+
+    // Read identifier
+    bit [7:0] chr = 0;
+    int ctr = 0;
+    string str = "";
+    always_ff @(negedge clock) begin
+        if (io_out[7]) begin
+            chr = (chr << 1) | io_out[6];
+            ctr += 1;
+            if (ctr == 8) begin
+                if (chr == 0) begin
+                    $display("Got identifier '%s'", str);
+                end
+                else begin
+                    str = {str, $sformatf("%c", chr)};
+                    ctr = 0;
+                    chr = 0;
+                end
+            end
+        end
     end
 
     initial begin
