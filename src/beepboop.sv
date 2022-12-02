@@ -15,9 +15,9 @@ module asinghani_beepboop (
     logic [15:0] counter; // 10ms interval
 
     // secret identifier message
-    logic [0:319] beepboop = {"Beep Boop by Anish Singhani, 2022-12-02", 8'h0};
+    logic [0:191] beepboop = {"asinghani/tt02-beepboop", 8'h0};
     assign chr_out = beepboop[counter-1];
-    assign chr_out_valid = (counter > 0) && (counter <= 320);
+    assign chr_out_valid = (counter > 0) && (counter <= 192);
 
     // Counter
     always_ff @(posedge clock) begin
